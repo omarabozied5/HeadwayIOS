@@ -1,7 +1,9 @@
 import SwiftUI
 
+
 struct ProfileScreen: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var languageManager: LanguageManager
     
     @State private var isEditingName = false
     @State private var newName: String = ""
@@ -13,115 +15,123 @@ struct ProfileScreen: View {
     @State private var navigateToLogin = false
     
     var body: some View {
-        VStack(spacing: 20) {
-            // Profile Icon
-            Image(systemName: "person.crop.circle.fill")
-                .resizable()
-                .frame(width: 100, height: 100)
-                .foregroundColor(.blue)
-                .padding(.top, 20)
-            
-            // Language Toggle Button
-            Button(action: {
-                withAnimation {
-                    
-                }
-            }) {
-                HStack {
-                    Image(systemName: "globe")
-                    
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.orange)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-            }
-            .padding(.horizontal)
-            
-            // Editable Name Field
-            VStack() {
-                Text("Name")
-                    .font(.headline)
-                    .foregroundColor(.gray)
+        NavigationView {
+            VStack(spacing: 20) {
+                // Profile Icon
+                Image(systemName: "person.crop.circle.fill")
+                    .resizable()
+                    .frame(width: 100, height: 100)
+                    .foregroundColor(.blue)
+                    .padding(.top, 20)
                 
-                if isEditingName {
-                    TextField("Enter new name", text: $newName)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(8)
-                        .background(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 1))
-                        
-                } else {
-                    Text(username)
-                        .font(.title3)
-                        .padding(8)
-                        .frame(maxWidth: .infinity)
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
-                        .onTapGesture {
-                            isEditingName = true
-                            newName = username
-                        }
+                // Language Toggle Button
+                Button(action: {
+                    languageManager.toggleLanguage()
+                }) {
+                    HStack {
+                        Image(systemName: "globe")
+                        Text(languageManager.localizedText("language"))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.orange)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
                 }
-            }
-            .padding(.horizontal)
-            
-            // Save Button
-            if isEditingName {
-                Button(action: saveName) {
-                    Text("Save")
+                .padding(.horizontal)
+                
+                // Editable Name Field
+                VStack(alignment: languageManager.isRTL ? .trailing : .leading) {
+                    Text(languageManager.localizedText("name"))
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                    
+                    if isEditingName {
+                        TextField(languageManager.localizedText("enterNewName"), text: $newName)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .multilineTextAlignment(languageManager.isRTL ? .trailing : .leading)
+                            .padding(8)
+                            .background(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 1))
+                    } else {
+                        Text(username)
+                            .font(.title3)
+                            .padding(8)
+                            .frame(maxWidth: .infinity, alignment: languageManager.isRTL ? .trailing : .leading)
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
+                            .onTapGesture {
+                                isEditingName = true
+                                newName = username
+                            }
+                    }
+                }
+                .padding(.horizontal)
+                
+                // Save Button
+                if isEditingName {
+                    Button(action: saveName) {
+                        Text(languageManager.localizedText("save"))
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                }
+                
+                // Email and Phone
+                ProfileRow(
+                    label: languageManager.localizedText("email"),
+                    value: userEmail,
+                    isDisabled: true,
+                    isRTL: languageManager.isRTL
+                )
+                
+                ProfileRow(
+                    label: languageManager.localizedText("phone"),
+                    value: userPhoneNumber,
+                    isDisabled: true,
+                    isRTL: languageManager.isRTL
+                )
+                
+                Spacer()
+                
+                // Logout Button
+                Button(action: { navigateToLogin = true }) {
+                    Text(languageManager.localizedText("logout"))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.green)
+                        .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
                 .padding(.horizontal)
-            }
-            
-            // Email and Phone
-            ProfileRow(label: "Email", value: userEmail, isDisabled: true)
-               
-            
-            ProfileRow(label: "Phone Number", value: userPhoneNumber, isDisabled: true)
                 
-            
-            Spacer()
-            
-            // Logout Button
-            Button(action: { navigateToLogin = true }) {
-                Text("Logout")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                // Delete Account Button
+                Button(action: deleteAccount) {
+                    Text(languageManager.localizedText("deleteAccount"))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 20)
+                
+                NavigationLink(destination: LoginScreen(), isActive: $navigateToLogin) {
+                    EmptyView()
+                }
+                .hidden()
             }
-            .padding(.horizontal)
+            .padding()
+            .background(Color(UIColor.systemGroupedBackground))
+            .navigationTitle(languageManager.localizedText("profile"))
             
-            // Delete Account Button
-            Button(action: deleteAccount) {
-                Text("Delete Account")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 20)
-            
-            NavigationLink(destination: LoginScreen(), isActive: $navigateToLogin) {
-                EmptyView()
-            }
-            .hidden()
         }
-        .padding()
-        .background(Color(UIColor.systemGroupedBackground))
-        .navigationTitle("Profile")
-        
+       
     }
     
-    // Existing functions remain the same
     private func saveName() {
         UserDefaults.standard.set(newName, forKey: "name")
         username = newName
@@ -137,15 +147,14 @@ struct ProfileScreen: View {
     }
 }
 
-
-// ✅ Custom ProfileRow View (for Email & Phone)
 struct ProfileRow: View {
     let label: String
     let value: String
     var isDisabled: Bool = false
+    var isRTL: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: isRTL ? .trailing : .leading, spacing: 8) {
             Text(label)
                 .font(.headline)
                 .foregroundColor(.gray)
@@ -153,7 +162,7 @@ struct ProfileRow: View {
             Text(value)
                 .font(.title3)
                 .padding(8)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: isRTL ? .trailing : .leading)
                 .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
                 .foregroundColor(isDisabled ? .gray : .black)
                 .opacity(isDisabled ? 0.6 : 1.0)

@@ -46,6 +46,7 @@ class HomeViewModel: ObservableObject {
     @Published var categories: [GifCategory] = []
     @Published var isLoading = false
     @Published var errorMessage: String? = nil
+    @Published var isOffline = false
     
     @Published var username: String {
         didSet { saveUserName() }
@@ -67,8 +68,18 @@ class HomeViewModel: ObservableObject {
             let response = try await NetworkManager.shared.sendRequestAsync(modelType: GifResponse.self, request)
             self.featuredGIFs = response.results
             self.errorMessage = nil
+            self.isOffline = false
+            // Cache the fetched GIFs
+            await GIFCache.shared.cacheGIFs(response.results)
         } catch {
-            self.errorMessage = "Failed to fetch GIFs"
+            // Try to load cached GIFs if network request fails
+            if let cachedGIFs = await GIFCache.shared.getCachedGIFs() {
+                self.featuredGIFs = cachedGIFs
+                self.isOffline = true
+                self.errorMessage = "Using cached data (offline mode)"
+            } else {
+                self.errorMessage = "Failed to fetch GIFs"
+            }
         }
         
         isLoading = false
@@ -87,6 +98,7 @@ class HomeViewModel: ObservableObject {
             let response = try await NetworkManager.shared.sendRequestAsync(modelType: GifResponse.self, request)
             self.featuredGIFs = response.results
             self.errorMessage = nil
+            self.isOffline = false
         } catch {
             self.errorMessage = "Failed to search GIFs"
         }
