@@ -10,6 +10,7 @@ Headway/
 │   ├── HomeView.swift
 │   ├── DetailScreen.swift
 │   └── ProfileScreen.swift
+│   └── RegistrationScreen.swift
 │
 ├── NetworkLayer/
 │   ├── Network/
