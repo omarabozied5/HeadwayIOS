@@ -30,79 +30,78 @@ struct DetailScreen: View {
     private let tenthHikeColors = (
         start: Color(red: 220.0/255, green: 200.0/255, blue: 180.0/255),
         end: Color(red: 200.0/255, green: 200.0/255, blue: 180.0/255)
-        )
+    )
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    // Profile Header
-                    Text("g_kumar")
-                        .font(.title)
-                        .fontWeight(.medium)
-                    
-                    // Settings Section
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Notifications:")
-                                .foregroundColor(.secondary)
-                            Text("On")
-                        }
-                        
-                        HStack {
-                            Text("Seasonal Photos:")
-                                .foregroundColor(.secondary)
-                            Text("⛄️")
-                        }
-                        
-                        HStack {
-                            Text("Goal Date:")
-                                .foregroundColor(.secondary)
-                            Text(goalDate)
-                        }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                // Profile Header
+                Text("g_kumar")
+                    .font(.title)
+                    .fontWeight(.medium)
+                
+                // Settings Section
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Notifications:")
+                            .foregroundColor(.secondary)
+                        Text("On")
                     }
-                    .font(.subheadline)
                     
-                    // Badges Section
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Completed Badges")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 20) {
-                                BadgeView(name: "First Hike",
-                                        gradientStart: firstHikeColors.start,
-                                        gradientEnd: firstHikeColors.end)
-                                
-                                BadgeView(name: "Earth Day",
-                                        gradientStart: earthDayColors.start,
-                                        gradientEnd: earthDayColors.end)
-                                
-                                BadgeView(name: "Tenth Hike",
-                                        gradientStart: tenthHikeColors.start,
-                                        gradientEnd: tenthHikeColors.end)
-                            }
-                            .padding(.horizontal, 2)
-                        }
+                    HStack {
+                        Text("Seasonal Photos:")
+                            .foregroundColor(.secondary)
+                        Text("⛄️")
                     }
-                    .padding(.vertical, 8)
                     
-                    // Recent Hikes Section
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Recent Hikes")
-                            .font(.title2)
-                            
-                        
-                        CompactHikeView(hike: sampleHike)
-                            
+                    HStack {
+                        Text("Goal Date:")
+                            .foregroundColor(.secondary)
+                        Text(goalDate)
                     }
                 }
-                .padding()
+                .font(.subheadline)
+                
+                // Badges Section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Completed Badges")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 20) {
+                            BadgeView(name: "First Hike",
+                                    gradientStart: firstHikeColors.start,
+                                    gradientEnd: firstHikeColors.end)
+                            
+                            BadgeView(name: "Earth Day",
+                                    gradientStart: earthDayColors.start,
+                                    gradientEnd: earthDayColors.end)
+                            
+                            BadgeView(name: "Tenth Hike",
+                                    gradientStart: tenthHikeColors.start,
+                                    gradientEnd: tenthHikeColors.end)
+                        }
+                        .padding(.horizontal, 2)
+                    }
+                }
+                .padding(.vertical, 8)
+                
+                // Recent Hikes Section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Recent Hikes")
+                        .font(.title2)
+                    
+                    CompactHikeView(hike: sampleHike)
+                }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                leading: Button(action: {
+            .padding()
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
                     dismiss()
                 }) {
                     HStack {
@@ -111,7 +110,7 @@ struct DetailScreen: View {
                     }
                     .foregroundColor(.blue)
                 }
-            )
+            }
         }
     }
 }

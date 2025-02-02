@@ -2,11 +2,15 @@
 //  ProfileScreen.swift
 //  Headway
 //
-//  Created by omar abozeid on 20/01/2025.
-//
+//  Created by omar abozeid on 22/01/2025.
+
 import SwiftUI
 
 struct ProfileScreen: View {
+    private func getOppositeLanguage() -> String {
+        return languageManager.isRTL ? "English" : "العربية"
+    }
+    
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject private var languageManager: LanguageManager
     
@@ -21,118 +25,148 @@ struct ProfileScreen: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Profile Icon
+            VStack(spacing: 16) {
+                // Profile Header Section
+                VStack(spacing: 8) {
                     Image(systemName: "person.crop.circle.fill")
                         .resizable()
-                        .frame(width: 100, height: 100)
+                        .frame(width: 80, height: 80)
                         .foregroundColor(.blue)
-                        .padding(.top, 20)
+                        .background(
+                            Circle()
+                                .fill(Color.blue.opacity(0.1))
+                                .frame(width: 90, height: 90)
+                        )
+                        .padding(.top, 8)
                     
                     // Language Toggle Button
-                    Button(action: {
-                        languageManager.toggleLanguage()
-                    }) {
-                        HStack {
-                            Image(systemName: "globe")
-                            Text(languageManager.localizedText("language"))
+                    Menu {
+                        Button(action: { languageManager.toggleLanguage() }) {
+                            HStack {
+                                Text(getOppositeLanguage())
+                                Image(systemName: "checkmark")
+                            }
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.orange)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "globe")
+                                .foregroundColor(.blue)
+                            Text(languageManager.localizedText("language"))
+                                .foregroundColor(.primary)
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.caption)
+                                .foregroundColor(.blue)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.blue.opacity(0.1))
+                        )
                     }
-                    .padding(.horizontal)
-                    
+                }
+                
+                // Profile Info Section
+                VStack(spacing: 16) {
                     // Editable Name Field
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 6) {
                         Text(languageManager.localizedText("name"))
-                            .font(.headline)
+                            .font(.subheadline)
                             .foregroundColor(.gray)
                         
                         if isEditingName {
-                            TextField(languageManager.localizedText("enterNewName"), text: $newName)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .multilineTextAlignment(languageManager.isRTL ? .trailing : .leading)
-                                .padding(8)
-                                .background(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 1))
-                        } else {
-                            Text(username)
-                                .font(.title3)
-                                .padding(8)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
-                                .onTapGesture {
-                                    isEditingName = true
-                                    newName = username
+                            HStack {
+                                TextField(languageManager.localizedText("enterNewName"), text: $newName)
+                                    .textFieldStyle(                     RoundedBorderTextFieldStyle())
+                                    .overlay(RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.white.opacity(0.5))
+                                        .allowsHitTesting(false))
+                                
+                                Button(action: saveName) {
+                                    Text(languageManager.localizedText("save"))
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .background(Color.blue)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(8)
                                 }
+                            }
+                        } else {
+                            HStack {
+                                Text(username)
+                                Spacer()
+                                Image(systemName: "pencil")
+                                    .foregroundColor(.blue)
+                            }
+                            .padding(12)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+                            .onTapGesture {
+                                isEditingName = true
+                                newName = username
+                            }
                         }
-                    }
-                    .padding(.horizontal)
-                    
-                    // Save Button
-                    if isEditingName {
-                        Button(action: saveName) {
-                            Text(languageManager.localizedText("save"))
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.green)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                        .padding(.horizontal)
                     }
                     
                     // Email and Phone
                     ProfileRow(
+                        icon: "envelope.fill",
                         label: languageManager.localizedText("email"),
                         value: userEmail,
                         isDisabled: true
                     )
                     
                     ProfileRow(
+                        icon: "phone.fill",
                         label: languageManager.localizedText("phone"),
                         value: userPhoneNumber,
                         isDisabled: true
                     )
-                    
-                    Spacer()
-                    
-                    // Logout Button
-                    Button(action: { navigateToLogin = true }) {
-                        Text(languageManager.localizedText("logout"))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    .padding(.horizontal)
-                    
-                    // Delete Account Button
-                    Button(action: deleteAccount) {
-                        Text(languageManager.localizedText("deleteAccount"))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.red)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom, 20)
-                    
-                    NavigationLink(destination: LoginScreen(), isActive: $navigateToLogin) {
-                        EmptyView()
-                    }
-                    .hidden()
                 }
+                .padding(16)
+                .background(Color.white)
+                .cornerRadius(12)
+                .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                
+                Spacer()
+                
+                // Action Buttons
+                VStack(spacing: 12) {
+                    Button(action: { navigateToLogin = true }) {
+                        HStack {
+                            Image(systemName: "rectangle.portrait.and.arrow.right")
+                            Text(languageManager.localizedText("logout"))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                    }
+                    
+                    Button(action: deleteAccount) {
+                        HStack {
+                            Image(systemName: "trash")
+                            Text(languageManager.localizedText("deleteAccount"))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.red.opacity(0.1))
+                        .foregroundColor(.red)
+                        .cornerRadius(10)
+                    }
+                }
+                
+                NavigationLink(destination: LoginScreen(), isActive: $navigateToLogin) {
+                    EmptyView()
+                }
+                .hidden()
             }
-            .padding()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
             .background(Color(UIColor.systemGroupedBackground))
             .navigationTitle(languageManager.localizedText("profile"))
-            
         }
         .environment(\.layoutDirection, languageManager.isRTL ? .rightToLeft : .leftToRight)
     }
@@ -153,24 +187,32 @@ struct ProfileScreen: View {
 }
 
 struct ProfileRow: View {
+    let icon: String
     let label: String
     let value: String
     var isDisabled: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(label)
-                .font(.headline)
+                .font(.subheadline)
                 .foregroundColor(.gray)
             
-            Text(value)
-                .font(.title3)
-                .padding(8)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(RoundedRectangle(cornerRadius: 10).fill(Color.white))
-                .foregroundColor(isDisabled ? .gray : .black)
-                .opacity(isDisabled ? 0.6 : 1.0)
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(.blue)
+                    .frame(width: 20)
+                Text(value)
+                    .foregroundColor(isDisabled ? .gray : .black)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.gray.opacity(0.05))
+            .cornerRadius(8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.gray.opacity(0.1), lineWidth: 1)
+            )
         }
-        .padding(.horizontal)
     }
 }
