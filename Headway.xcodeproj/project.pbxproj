@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		47E2894C2D4EE3DA005856E5 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 47E2894B2D4EE3DA005856E5 /* SDWebImageSwiftUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		47B9B76D2D4E6AD3007DD446 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47E2894C2D4EE3DA005856E5 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = Headway;
 			packageProductDependencies = (
+				47E2894B2D4EE3DA005856E5 /* SDWebImageSwiftUI */,
 			);
 			productName = Headway;
 			productReference = 47B9B75C2D4E6ACE007DD446 /* Headway.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 47B9B7532D4E6ACE007DD446;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				47E2894A2D4EE3DA005856E5 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 47B9B75D2D4E6ACE007DD446 /* Products */;
 			projectDirPath = "";
@@ -552,6 +561,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		47E2894A2D4EE3DA005856E5 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		47E2894B2D4EE3DA005856E5 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 47E2894A2D4EE3DA005856E5 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 47B9B7542D4E6ACE007DD446 /* Project object */;
 }

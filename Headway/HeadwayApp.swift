@@ -9,13 +9,13 @@ import SwiftUI
 
 @main
 struct HeadwayApp: App {
-    @StateObject private var languageManager = LanguageManager.shared
+  
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.layoutDirection, languageManager.isRTL ? .rightToLeft : .leftToRight)
-                .environmentObject(languageManager)
+                .environmentObject(LanguageManager.shared)
+            
         }
     }
 }
