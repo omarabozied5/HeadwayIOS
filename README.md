@@ -47,7 +47,7 @@ Headway/
 ## Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/headway.git
+git clone https://github.com/omarabozeid5/headway.git
 ```
 
 2. Open `Headway.xcodeproj` in Xcode
@@ -73,7 +73,7 @@ The app uses the following APIs:
 - SwiftUI for UI
 - MVVM architecture
 - Async/await for networking
-- UserDefaults for local storage
+- UserDefaults & AppStorage for local storage
 
 ## Contributing
 1. Fork the repository
