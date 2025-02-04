@@ -146,10 +146,11 @@ struct RegestirationScreen: View {
         // Phone Validation
         if phone.isEmpty {
             phoneError = "Phone number is required."
+        } else if !isValidEgyptianPhone(phone) {
+            phoneError = "Invalid Egyptian phone number. Must start with 010, 011, 012, or 015 and have 11 digits."
         } else {
             phoneError = ""
         }
-        
         // Password Validation
         if password.isEmpty {
             passwordError = "Password is required."
@@ -159,14 +160,7 @@ struct RegestirationScreen: View {
             passwordError = ""
         }
         
-        // Phone Validation
-        if phone.isEmpty {
-            phoneError = "Phone number is required."
-        } else if !isValidEgyptianPhone(phone) {
-            phoneError = "Invalid Egyptian phone number. Must start with 010, 011, 012, or 015 and have 11 digits."
-        } else {
-            phoneError = ""
-        }
+        
         
         // Confirm Password Validation
         if confirmPassword != password {
